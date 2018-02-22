@@ -4,4 +4,4 @@ Makefile
 main:
 	gcc -o sort main.c -std=c11
 
-Run sort as: ./sort -> not according to req
+Run sort as: ./sort file.txt

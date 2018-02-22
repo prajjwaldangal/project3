@@ -56,6 +56,7 @@ int main (int argc, const char *argv[]) {
 		
 		arr_i ++;		
 	}
+	arr_i = arr_i -1;
 	arr = (int *) malloc(sizeof(int) * arr_i);
 	j = 0;
 	t = 0;
@@ -75,6 +76,7 @@ int main (int argc, const char *argv[]) {
 		t = j+1;
 		j += 1;
 		arr[n_d] = dig;
+		n_d ++;
 	}
 	
 	printf("s_size: %d\ns: %s\n", s_size, s);
@@ -113,10 +115,10 @@ int main (int argc, const char *argv[]) {
         
     // 3. sort half1 by thread1
     // create thread1
-    pthread_t thread1, thread2;
+    //pthread_t thread1, thread2;
     //pthread_create(&tid, NULL,  
     // sort using thread1
-    sort(arr1, len_arr1);
+    //sort(arr1, len_arr1);
     // create thread2
     // sort using thread2
    
