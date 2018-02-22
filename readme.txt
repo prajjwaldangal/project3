@@ -1,4 +1,4 @@
-It's better for file.txt to not start nor end with a space character.
+file.txt should not start nor end with a space character.
 
 Makefile
 main:
