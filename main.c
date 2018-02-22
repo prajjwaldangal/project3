@@ -14,28 +14,26 @@ int main (int argc, const char *argv[]) {
     } else {
         char c;
         
-        size_t arr_size=0;
+        size_t s_size=0;
 	while ((c=fgetc(fp)) != EOF) {
-		if (arr_size % 2 == 0)
-			arr_size += 1;
+		s_size += 1;
 	}
-	int * arr = (int *) malloc(sizeof(char)*arr_size);
+	char * s = (char *) malloc(sizeof(char)*s_size);
+	// rewind and insert chars into s	
 	rewind(fp);
-	//int i = 0;
-        
-	while ( (c = fgetc(fp)) != EOF ) {
-            if (c == ' ') {
-                strcat(s, &c);
-            }
-            i += 1;
-            s = (char *) realloc(s, sizeof(char) * i);
-        }
-        // char * strtok ( char * str, const char * delimiters );
-        // splits a given string *str by delimiter
-        strtok(s, " ");
-        printf("%s\n", s);
-        fclose(fp);
-        free(s);
+	int i = 0;
+	printf("\n");
+	while ((c = fgetc(fp)) != EOF) {
+		s[i] = c;
+		i++;
+	}
+
+	// convert to int, and insert into arr
+	size_t int_arr_size = (int) s_size / 2 + 1;	
+	//int * arr = 
+	//strtok(s, " ");
+	
+	printf("s_size: %d\ns: %s\n, intarrsize: %d\n", s_size, s, int_arr_size);
     }
     // split into two, half1 and half2
     
