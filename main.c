@@ -3,6 +3,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+int comp (const void * elem1, const void * elem2);
+void sort (int * arr);
+
 // 1. create arr
 int * arr; 
 int arr_i = 0; // arr_length -> inappropriately named
@@ -67,9 +70,6 @@ int main (int argc, const char *argv[]) {
 		printf("%d ", arr[a]);
 	}
     }
-    // i -> total no. of characters in the file, k & t reusable
-    // n_d -> no. of integers <=> arr_i
-
     // 2. split into two, half1 and half2
     printf("arr_i = %d\n", arr_i);
     int len_arr1 = (int)arr_i/2;
@@ -99,11 +99,31 @@ int main (int argc, const char *argv[]) {
     printf("\n");
         
     // 3. sort half1 by thread1
-
+    // create thread1
+    pthread_t thread1, thread2;
+    //pthread_create(&tid, NULL,  
+    // sort using thread1
+    sort(arr1);
+    // create thread2
+    // sort using thread2
+   
     
     // sort half2 by thread2
     
     // merge two halves -> arr2 -> thread3
     
+    return 0;
+}
+
+void sort(int * arr) {
+	qsort(arr, sizeof(arr)/sizeof(*arr), sizeof(*arr), comp);
+}
+
+int * comp (const void * elem1, const void * elem2) 
+{
+    int f = *((int*)elem1);
+    int s = *((int*)elem2);
+    if (f > s) return  1;
+    if (f < s) return -1;
     return 0;
 }
