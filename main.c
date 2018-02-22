@@ -5,7 +5,7 @@
 
 // to-do: check gcc version,
 int main (int argc, const char *argv[]) {
-    // create arr
+    // 1. create arr
     printf("filename: %s, args count: %d\n", argv[1], argc);
     const char * filename = argv[1];
     FILE * fp = fopen(filename, "r");
@@ -19,7 +19,7 @@ int main (int argc, const char *argv[]) {
 		s_size += 1;
 	}
 	char * s = (char *) malloc(sizeof(char)*s_size);
-	// rewind and insert chars into s	
+	// 1.1 rewind and insert chars into s	
 	rewind(fp);
 	int i = 0;
 	printf("\n");
@@ -27,13 +27,43 @@ int main (int argc, const char *argv[]) {
 		s[i] = c;
 		i++;
 	}
-
-	// convert to int, and insert into arr
-	size_t int_arr_size = (int) s_size / 2 + 1;	
-	//int * arr = 
-	//strtok(s, " ");
 	
-	printf("s_size: %d\ns: %s\n, intarrsize: %d\n", s_size, s, int_arr_size);
+	// 1.2 generate int arr
+	int j = 0;
+	int n_d = 0; // no. of integers
+	while(j <= i) {
+		if (s[i] == ' ')
+			n_d ++;
+		j ++;
+	}
+	n_d = i - n_d;
+	int * arr = (int *) malloc(sizeof(int) * n_d);
+	j = 0;
+	int t = 0; // t is for tracking_index
+	int arr_i = 0; // index into arr
+	while (j <= i) {
+		while (s[j] != ' ' && s[j] != '\0') {
+			j += 1;
+		}
+		char * c_dig = (char *) malloc(sizeof(char)*(j-t));
+		int k=t; // k -> "local var"
+		while(k < j) {
+			c_dig[k-t] = s[k];
+			k += 1;
+		}		
+		int dig = atoi(c_dig);
+		t = j+ 1;
+		j += 1;
+		
+		arr[arr_i] = dig;
+		arr_i ++;
+		printf("dig: %d\n", dig); 		
+	}
+	
+	printf("s_size: %d\ns: %s\n", s_size, s);
+	for (int a=0; a <= arr_i; a++) {
+		printf("%d ", arr[a]);
+	}
     }
     // split into two, half1 and half2
     
