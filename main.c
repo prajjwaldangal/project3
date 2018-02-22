@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 int comp (const void * elem1, const void * elem2);
-void sort (int * arr);
+void sort (int * arr, int len_arr);
 
 // 1. create arr
 int * arr; 
@@ -36,7 +36,7 @@ int main (int argc, const char *argv[]) {
 	
 	// 1.3 generate int arr
 	int j = 0;
-	int n_d = 0; // no. of integers
+	int n_d = 0; // no. of integer characters
 	while(j <= i) {
 		if (s[i] == ' ')
 			n_d ++;
@@ -44,28 +44,41 @@ int main (int argc, const char *argv[]) {
 	}
 	n_d = i - n_d;
 	j = 0;
-	arr = (int *) malloc(sizeof(int) * n_d);
+	// more arr contains more integer slots than required
 	int t = 0; // t is for tracking_index
+	// 
 	while (j <= i) {
 		while (s[j] != ' ' && s[j] != '\0') {
 			j += 1;
 		}
-		char * c_dig = (char *) malloc(sizeof(char)*(j-t));
+		t = j+ 1;
+		j += 1;
+		
+		arr_i ++;		
+	}
+	arr = (int *) malloc(sizeof(int) * arr_i);
+	j = 0;
+	t = 0;
+	n_d = 0; // reusing residual var
+	while(j <= i) {
+		while(s[j] != ' ' && s[j] != '\0') {
+			j += 1;
+		}
 		int k=t; // k -> "local var"
+		char * c_dig = (char *) malloc(sizeof(char)*(j-t));
 		while(k < j) {
 			c_dig[k-t] = s[k];
 			k += 1;
 		}		
 		int dig = atoi(c_dig);
-		t = j+ 1;
+		free(c_dig);
+		t = j+1;
 		j += 1;
-		
-		arr[arr_i] = dig;
-		arr_i ++;
-		printf("dig: %d\n", dig); 		
+		arr[n_d] = dig;
 	}
 	
 	printf("s_size: %d\ns: %s\n", s_size, s);
+        printf("int_arr:\n");
 	for (int a=0; a <= arr_i; a++) {
 		printf("%d ", arr[a]);
 	}
@@ -103,7 +116,7 @@ int main (int argc, const char *argv[]) {
     pthread_t thread1, thread2;
     //pthread_create(&tid, NULL,  
     // sort using thread1
-    sort(arr1);
+    sort(arr1, len_arr1);
     // create thread2
     // sort using thread2
    
@@ -112,14 +125,20 @@ int main (int argc, const char *argv[]) {
     
     // merge two halves -> arr2 -> thread3
     
+    
+    free(arr1);
+    free(arr2);
+    free(arr);
     return 0;
 }
 
-void sort(int * arr) {
-	qsort(arr, sizeof(arr)/sizeof(*arr), sizeof(*arr), comp);
+void sort(int * arr, int len_arr) {
+    qsort(arr, len_arr, sizeof(*arr), comp);
+    for (int i = 0 ; i < len_arr; i++)
+        printf ("%d ", arr[i]);
 }
 
-int * comp (const void * elem1, const void * elem2) 
+int comp (const void * elem1, const void * elem2) 
 {
     int f = *((int*)elem1);
     int s = *((int*)elem2);
