@@ -13,14 +13,22 @@ int main (int argc, const char *argv[]) {
         fprintf(stderr, "error opening file\n");
     } else {
         char c;
-        char * s = (char *) malloc(1);
-        int i=1;
-        while ( (c = fgetc(fp)) != EOF ) {
-            if (i % 2 != 1) {
+        
+        size_t arr_size=0;
+	while ((c=fgetc(fp)) != EOF) {
+		if (arr_size % 2 == 0)
+			arr_size += 1;
+	}
+	int * arr = (int *) malloc(sizeof(char)*arr_size);
+	rewind(fp);
+	//int i = 0;
+        
+	while ( (c = fgetc(fp)) != EOF ) {
+            if (c == ' ') {
                 strcat(s, &c);
             }
             i += 1;
-            s = (char *) realloc(s, i);
+            s = (char *) realloc(s, sizeof(char) * i);
         }
         // char * strtok ( char * str, const char * delimiters );
         // splits a given string *str by delimiter
