@@ -3,13 +3,19 @@
 #include <string.h>
 #include <pthread.h>
 
-int arr_size = 0;
-int * arr;
+struct sort_args {
+	int * arr;
+	int size;
+};
+typedef struct sort_args sort_args;
+
 void display_arr(int * arr, int size);
-void * sort(int * arr, int len_arr);
+void * sort(void * args);
 int comp (const void * elem1, const void * elem2);
 
 int main(int argc, const char * argv[]) {
+	int arr_size = 0;
+	int * arr;
 	// 1.1 get command line arguments
 	printf("args count: %d, filename: %s\n", argc, argv[1]);
 	const char * filename = argv[1];
@@ -44,13 +50,19 @@ int main(int argc, const char * argv[]) {
 	display_arr(arr, arr_size);
 	
 	pthread_t thread1, thread2;
-	pthread_create(&thread1, NULL, sort, (void *) NULL);
+	// args1 is for arr1, args2 is for arr2
+	sort_args * args1 = (sort_args*)malloc(sizeof(sort_args));
+	args1->arr = sub_arr1;
+	args1->size = len_sub_arr1;
+	sort_args * args2 = (sort_args*)malloc(sizeof(sort_args));
+	args2->arr = sub_arr2;
+	args2->size = len_sub_arr2;
 	
-	printf("Sub array 1: \n");
-	display_arr(sub_arr1, len_sub_arr1);
-	printf("Sub array 2: \n");
-	display_arr(sub_arr2, len_sub_arr2);
-	
+	pthread_create(&thread1, NULL, sort, (void *)args1);
+	pthread_create(&thread2, NULL, sort, (void *)args2);
+	printf("Sub array zzz: \n");
+    	display_arr(args1->arr, args1->size);
+	pthread_exit(NULL);
 	return 0;
 }
 
@@ -61,8 +73,13 @@ void display_arr(int * arr, int size) {
 	printf("\n");
 }
 
-void * sort(int * arr, int len_arr) {
-    qsort(arr, len_arr, sizeof(*arr), comp);
+void * sort(void * args) {
+    sort_args * sa = (sort_args *)args;
+    //int * arr = sa->arr;
+    //int size = sa->size; 
+    qsort(sa->arr, sa->size, sizeof(sa->arr), comp);
+    printf("Sub array 1: \n");
+    display_arr(sa->arr, sa->size);
 }
 
 int comp (const void * elem1, const void * elem2) 

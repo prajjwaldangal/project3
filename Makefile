@@ -1,2 +1,2 @@
 main:
-	gcc -o sort main.c -std=c11
+	gcc -o sort -pthread main.c -std=c11
