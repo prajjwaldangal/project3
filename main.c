@@ -3,9 +3,12 @@
 #include <string.h>
 #include <stdlib.h>
 
+// 1. create arr
+int * arr; 
+int arr_i = 0; // arr_length -> inappropriately named
 // to-do: check gcc version,
 int main (int argc, const char *argv[]) {
-    // 1. create arr
+    // 1.1 
     printf("filename: %s, args count: %d\n", argv[1], argc);
     const char * filename = argv[1];
     FILE * fp = fopen(filename, "r");
@@ -19,7 +22,7 @@ int main (int argc, const char *argv[]) {
 		s_size += 1;
 	}
 	char * s = (char *) malloc(sizeof(char)*s_size);
-	// 1.1 rewind and insert chars into s	
+	// 1.2 rewind and insert chars into s	
 	rewind(fp);
 	int i = 0;
 	printf("\n");
@@ -28,7 +31,7 @@ int main (int argc, const char *argv[]) {
 		i++;
 	}
 	
-	// 1.2 generate int arr
+	// 1.3 generate int arr
 	int j = 0;
 	int n_d = 0; // no. of integers
 	while(j <= i) {
@@ -37,10 +40,9 @@ int main (int argc, const char *argv[]) {
 		j ++;
 	}
 	n_d = i - n_d;
-	int * arr = (int *) malloc(sizeof(int) * n_d);
 	j = 0;
+	arr = (int *) malloc(sizeof(int) * n_d);
 	int t = 0; // t is for tracking_index
-	int arr_i = 0; // index into arr
 	while (j <= i) {
 		while (s[j] != ' ' && s[j] != '\0') {
 			j += 1;
@@ -65,9 +67,39 @@ int main (int argc, const char *argv[]) {
 		printf("%d ", arr[a]);
 	}
     }
-    // split into two, half1 and half2
-    
-    // sort half1 by thread1
+    // i -> total no. of characters in the file, k & t reusable
+    // n_d -> no. of integers <=> arr_i
+
+    // 2. split into two, half1 and half2
+    printf("arr_i = %d\n", arr_i);
+    int len_arr1 = (int)arr_i/2;
+    int len_arr2 = arr_i - len_arr1;
+    int * arr1 = (int *)malloc(sizeof(int)*len_arr1);
+    int * arr2 = (int *)malloc(sizeof(int)*len_arr2);
+    // insert into arr1
+    int k;
+    for (k=0; k <= len_arr1; k++) {
+	arr1[k] = arr[k];
+    }
+    // insert into arr2
+    for (k=1; k <= len_arr2; k++) {
+	arr2[k-1] = arr[len_arr1+k];
+    }
+    // output arr1
+    printf("Array1:\n");
+    for (k=0; k <= len_arr1; k++) {
+	printf("%d ", arr1[k]);
+    }
+    printf("\n");
+    printf("Array2:\n");
+    // output arr2
+    for (k=0; k <= len_arr2; k++) {
+	printf("%d ", arr2[k]);
+    }
+    printf("\n");
+        
+    // 3. sort half1 by thread1
+
     
     // sort half2 by thread2
     
