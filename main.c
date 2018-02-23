@@ -5,8 +5,7 @@
 
 int * arr;
 int arr_size=0;
-//int len_sub_arr1=0;
-//int len_sub_arr2 = 0;
+
 void display_arr(int * array, int beg, int end);
 void * worker(void * args);
 int comp (const void * elem1, const void * elem2);
@@ -33,8 +32,6 @@ int main(int argc, const char * argv[]) {
 	}
 	fclose(fp);
 	
-	//len_sub_arr1 = (int) arr_size/2;
-	//len_sub_arr2 = arr_size - len_sub_arr1;
 	printf("Original array: \n");
 	display_arr(arr, 0, arr_size);
 	
@@ -50,7 +47,9 @@ int main(int argc, const char * argv[]) {
 	
 	pthread_create(&thread1, &attr1, worker, (void *)args1);
 	pthread_create(&thread2, &attr2, worker, (void *)args2);
-	//pthread_create(&thread_m, &attr_m, merge, 
+	pthread_join(thread1, NULL);
+	pthread_join(thread2, NULL);
+	pthread_create(&thread_m, &attr_m, worker, (void *)args3); 
 	pthread_exit(NULL);
 	return 0;
 }
@@ -129,24 +128,20 @@ void merge_sort(int array[], int l, int r) {
 
 
 void * worker(void * args) {
-	char * arr_num = (char *) args;
+	char * num = (char *) args;
 	int mid = arr_size / 2;
-	if (*arr_num == '1') {
+	if (*num == '1') {
 		merge_sort(arr, 0, mid);
 		printf("Sub array 1 sorted by thread1\n");
 		display_arr(arr, 0, mid);
-	} else {
+	} else if(*num == '2') {
 		merge_sort(arr, mid+1, arr_size);
 		printf("Sub array 2 sorted by thread2\n");
 		display_arr(arr, mid+1, arr_size);
+	} else {
+		merge(arr, 0, mid, arr_size);
+		printf("Merge arr by thread3\n");
+		display_arr(arr, 0, arr_size);
 	}
-}
-
-int comp (const void * elem1, const void * elem2) 
-{
-    int f = *((int*)elem1);
-    int s = *((int*)elem2);
-    if (f > s) return  1;
-    if (f < s) return -1;
-    return 0;
+	pthread_exit(NULL);
 }
