@@ -6,8 +6,6 @@ Input requirements:
 
 Appropriate comments accompany the code in main.c which is the only src file.
 
-Please use with linux that comes with the book
-
 Makefile
 
 main:
@@ -19,3 +17,6 @@ To make:
 	
 To Run: 
 	./sort file.txt
+	
+Note: To be used with Jessie Linux that comes with the book.
+
