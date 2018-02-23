@@ -6,6 +6,8 @@ Input requirements:
 
 Appropriate comments accompany the code in main.c which is the only src file.
 
+Please use with linux that comes with the book
+
 Makefile
 
 main:
