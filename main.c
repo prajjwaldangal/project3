@@ -3,12 +3,15 @@
 #include <string.h>
 #include <pthread.h>
 
+// all threads operate on arr
 int * arr;
 int arr_size=0;
 
+// helper function to display array
 void display_arr(int * array, int beg, int end);
+
+// worker for pthreads
 void * worker(void * args);
-int comp (const void * elem1, const void * elem2);
 
 int main(int argc, const char * argv[]) {
 	
@@ -26,15 +29,18 @@ int main(int argc, const char * argv[]) {
 	arr_size++;
 	arr = (int *) malloc(sizeof(int) * arr_size);
 	int i = 0;
+	// rewind and read into arr
 	rewind(fp);
 	while ((fscanf(fp, "%d", &arr[i])) == 1) {
 		i++;
 	}
 	fclose(fp);
 	
+	// display origin array
 	printf("Original array: \n");
 	display_arr(arr, 0, arr_size);
 	
+	// thread part
 	pthread_t thread1, thread2, thread_m;
 	pthread_attr_t attr1, attr2, attr_m;
 	pthread_attr_init(&attr1);
@@ -45,11 +51,17 @@ int main(int argc, const char * argv[]) {
 	char * args2 = "2";
 	char * args3 = "3";
 	
+	// sort first half of arr
 	pthread_create(&thread1, &attr1, worker, (void *)args1);
+	// sort second half of arr
 	pthread_create(&thread2, &attr2, worker, (void *)args2);
+	
+	// pthread_join should be used in order for a thread
+	// to wait for other threads to run to completion
 	pthread_join(thread1, NULL);
 	pthread_join(thread2, NULL);
 	pthread_create(&thread_m, &attr_m, worker, (void *)args3); 
+	// exit thread
 	pthread_exit(NULL);
 	return 0;
 }
@@ -61,23 +73,24 @@ void display_arr(int array[], int beg, int end) {
 	printf("\n");
 }
 
+// standard merge procedure
 void merge(int array[], int l, int m, int r)
 {
     int i, j, k;
     int n1 = m - l + 1;
     int n2 =  r - m;
  
-    /* create temp arrays */
+    // create temp arrays
     int * L = (int *) malloc(sizeof(int)*n1);
     int * R = (int *) malloc(sizeof(int)*n2);
  
-    /* Copy data to temp arrays L[] and R[] */
+    // Copy data to temp arrays L[] and R[] 
     for (i = 0; i < n1; i++)
         L[i] = arr[l + i];
     for (j = 0; j < n2; j++)
         R[j] = arr[m + 1+ j];
  
-    /* Merge the temp arrays back into arr[l..r]*/
+    // Merge the temp arrays back into arr[l..r]
     i = 0; // Initial index of first subarray
     j = 0; // Initial index of second subarray
     k = l; // Initial index of merged subarray
@@ -96,8 +109,8 @@ void merge(int array[], int l, int m, int r)
         k++;
     }
  
-    /* Copy the remaining elements of L[], if there
-       are any */
+    // Copy the remaining elements of L[], if there
+    //   are any
     while (i < n1)
     {
         array[k] = L[i];
@@ -105,8 +118,8 @@ void merge(int array[], int l, int m, int r)
         k++;
     }
  
-    /* Copy the remaining elements of R[], if there
-       are any */
+    // Copy the remaining elements of R[], if there
+    //   are any
     while (j < n2)
     {
         array[k] = R[j];
@@ -117,6 +130,7 @@ void merge(int array[], int l, int m, int r)
     free(R);
 }
 
+// standard merge_sort procedure
 void merge_sort(int array[], int l, int r) {
 	if (l < r) {
 		int m=l+(r-l)/2;
