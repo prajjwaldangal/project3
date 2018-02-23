@@ -3,15 +3,7 @@
 #include <string.h>
 #include <pthread.h>
 
-struct sort_args {
-	int * arr;
-	int size;
-};
-typedef struct sort_args sort_args;
-
-int * arr; 
-int * sub_arr1;
-int * sub_arr2;
+int * arr;
 int arr_size=0;
 int len_sub_arr1=0;
 int len_sub_arr2 = 0;
@@ -43,15 +35,6 @@ int main(int argc, const char * argv[]) {
 	
 	len_sub_arr1 = (int) arr_size/2;
 	len_sub_arr2 = arr_size - len_sub_arr1;
-	sub_arr1 = (int *)malloc(sizeof(int)*len_sub_arr1);
-	sub_arr2 = (int *)malloc(sizeof(int)*len_sub_arr2);
-	for (int j=0; j < arr_size; j++) {
-		if (j < len_sub_arr1) {
-			sub_arr1[j] = arr[j];
-		} else {
-			sub_arr2[j-len_sub_arr1] = arr[j];
-		}
-	}
 	printf("Original array: \n");
 	display_arr(arr, arr_size);
 	
@@ -60,20 +43,14 @@ int main(int argc, const char * argv[]) {
 	pthread_attr_init(&attr1);
 	pthread_attr_init(&attr2);
 	pthread_attr_init(&attr_m);
-	// args1 is for arr1, args2 is for arr2
-	//sort_args * args1 = (sort_args*)malloc(sizeof(sort_args));
-	//args1->arr = sub_arr1;
-	//args1->size = len_sub_arr1;
-	//sort_args * args2 = (sort_args*)malloc(sizeof(sort_args));
-	//args2->arr = sub_arr2;
-	//args2->size = len_sub_arr2;
+	
 	char * args1 = "1";
 	char * args2 = "2";
+	char * args3 = "3";
 	
 	pthread_create(&thread1, &attr1, worker, (void *)args1);
 	pthread_create(&thread2, &attr2, worker, (void *)args2);
-	printf("here Sub array 1: \n");
-    	display_arr(sub_arr1, len_sub_arr1);
+	//pthread_create(&thread_m, &attr_m, merge, 
 	pthread_exit(NULL);
 	return 0;
 }
@@ -153,15 +130,13 @@ void merge_sort(int array[], int l, int r) {
 
 void * worker(void * args) {
 	char * arr_num = (char *) args;
-	
+	int mid = arr_size / 2;
 	if (*arr_num == '1') {
-		merge_sort(sub_arr1, 0, len_sub_arr1);
-		display_arr(sub_arr1, len_sub_arr1);
+		merge_sort(arr, 0, mid);
+		display_arr(arr, arr_size);
 	} else {
-		merge_sort(sub_arr2, len_sub_arr1, arr_size);
-		display_arr(sub_arr2, len_sub_arr2);
-	}
-	//free(arr_num);
+		merge_sort(arr, mid+1, arr_size);
+		display_arr(arr, arr_size);
 }
 
 int comp (const void * elem1, const void * elem2) 
